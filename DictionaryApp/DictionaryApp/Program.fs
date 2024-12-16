@@ -44,6 +44,16 @@ let searchWords (keyword: string) (dictionary: Map<string, string>) =
     |> Seq.map (fun (k, v) -> $"{k}: {v}")
     |> Seq.toArray
 
+// save the dictionary to a JSON file
+let saveDictionaryToFile dictionary =
+    try
+        let json = JsonConvert.SerializeObject(dictionary)
+        File.WriteAllText(dictionaryFilePath, json)
+    with ex -> 
+        MessageBox.Show($"Failed to save dictionary: {ex.Message}") |> ignore
+
+
+
 // load the dictionary from a JSON file
 let loadDictionaryFromFile () =
     try
@@ -99,6 +109,7 @@ let createControls () =
 // Form
 let createForm () =
     // Create the form
+    let mutable dictionary = loadDictionaryFromFile()
     let form = new Form(Text = "Digital Dictionary", Width = 700, Height = 460, BackColor = Color.FromArgb(18, 24, 36))
     form.Font <- new Font("Segoe UI Semibold", 11.0f)
     form.MaximizeBox <- false
@@ -116,7 +127,60 @@ let createForm () =
         lstSuggestions :> Control; lstResults :> Control
     |])
 
-    
+        // Access specific controls for events
+    btnAdd.Click.Add(fun _ ->
+        match addWord txtWord.Text txtDefinition.Text dictionary with
+        | Ok updatedDictionary ->
+            dictionary <- updatedDictionary
+            saveDictionaryToFile dictionary
+            MessageBox.Show("Word added successfully!") |> ignore
+            txtWord.Clear()
+            txtDefinition.Clear()
+        | Error msg ->
+            MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning) |> ignore)
+            
+    btnUpdate.Click.Add(fun _ -> 
+        match updateWord txtWord.Text txtDefinition.Text dictionary with
+        | Ok updatedDictionary ->
+            dictionary <- updatedDictionary
+            saveDictionaryToFile dictionary
+            MessageBox.Show("Word updated successfully!") |> ignore
+            txtWord.Clear()
+            txtDefinition.Clear()
+        | Error msg -> 
+            MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning) |> ignore)
+
+    btnDelete.Click.Add(fun _ -> 
+        match deleteWord txtWord.Text dictionary with
+        | Ok updatedDictionary ->
+            dictionary <- updatedDictionary
+            saveDictionaryToFile dictionary
+            MessageBox.Show("Word deleted successfully!") |> ignore
+            txtWord.Clear()
+        | Error msg -> 
+            MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning) |> ignore)
+
+    txtSearch.TextChanged.Add(fun _ -> 
+        let suggestions = 
+            searchWords txtSearch.Text dictionary
+            |> Array.map (fun item -> item.Split(':').[0]) // Extract only the word for suggestions
+        lstSuggestions.Items.Clear()
+        lstSuggestions.Items.AddRange(suggestions |> Array.map box)
+        lstSuggestions.Visible <- suggestions.Length > 0)
+
+    lstSuggestions.SelectedIndexChanged.Add(fun _ -> 
+        if lstSuggestions.SelectedIndex >= 0 then
+            txtSearch.Text <- lstSuggestions.SelectedItem.ToString()
+            lstSuggestions.Items.Clear()
+            lstSuggestions.Visible <- false)
+
+    btnSearch.Click.Add(fun _ -> 
+        let results = searchWords txtSearch.Text dictionary
+        lstResults.Items.Clear()
+        if results.Length = 0 then
+            MessageBox.Show("No matching word found!", "Search Result", MessageBoxButtons.OK, MessageBoxIcon.Information) |> ignore
+        else
+            lstResults.Items.AddRange(results |> Array.map box))
 
     form
 

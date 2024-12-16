@@ -37,6 +37,18 @@ let searchWords (keyword: string) (dictionary: Map<string, string>) =
     |> Seq.map (fun (k, v) -> $"{k}: {v}")
     |> Seq.toArray
 
+// load the dictionary from a JSON file
+let loadDictionaryFromFile () =
+    try
+        if File.Exists(dictionaryFilePath) then
+            let json = File.ReadAllText(dictionaryFilePath)
+            JsonConvert.DeserializeObject<Map<string, string>>(json)
+        else
+            Map.empty
+    with ex -> 
+        MessageBox.Show($"Failed to load dictionary: {ex.Message}") |> ignore
+        Map.empty
+
 // Controls
 let createControls () =
     // Labels

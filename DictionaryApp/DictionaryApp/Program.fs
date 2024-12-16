@@ -28,7 +28,14 @@ let updateWord (word: string) (definition: string) (dictionary: Map<string, stri
     | word ->  // Case for successfully updating the word
         let updatedDictionary = dictionary.Add(word.ToLower(), definition)
         Ok updatedDictionary
-
+// delete a word from the dictionary
+let deleteWord (word: string) (dictionary: Map<string, string>) =
+    match word.Trim() with
+    | "" -> Error "Please enter a valid word."  // Case for empty or whitespace word
+    | word when not (dictionary.ContainsKey(word.ToLower())) -> Error "Word not found!"  // Case for word not found
+    | word ->  // Case for successfully deleting the word
+        let updatedDictionary = dictionary.Remove(word.ToLower())
+        Ok updatedDictionary
 // search for words starting with a keyword
 let searchWords (keyword: string) (dictionary: Map<string, string>) =
     dictionary

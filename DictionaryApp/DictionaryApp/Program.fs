@@ -29,6 +29,14 @@ let updateWord (word: string) (definition: string) (dictionary: Map<string, stri
         let updatedDictionary = dictionary.Add(word.ToLower(), definition)
         Ok updatedDictionary
 
+// search for words starting with a keyword
+let searchWords (keyword: string) (dictionary: Map<string, string>) =
+    dictionary
+    |> Map.filter (fun key _ -> key.StartsWith(keyword.ToLower()))
+    |> Map.toSeq
+    |> Seq.map (fun (k, v) -> $"{k}: {v}")
+    |> Seq.toArray
+
 // Controls
 let createControls () =
     // Labels

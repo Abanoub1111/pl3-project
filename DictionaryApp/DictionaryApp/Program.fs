@@ -12,11 +12,22 @@ let dictionaryFilePath = "dictionary.json"
 let addWord (word: string) (definition: string) (dictionary: Map<string, string>) =
     match word.Trim() with
     | "" -> Error "Please enter a valid word."  // Case for empty or whitespace word
+    | word when definition.Trim() = "" -> Error "Definition cannot be empty" // Case for empty or whitespace definition
     | word when dictionary.ContainsKey(word.ToLower()) -> Error "Word already exists!"  // Case for existing word
     | word ->  // Case for successfully adding the word
         let updatedDictionary = dictionary.Add(word.ToLower(), definition)
         Ok updatedDictionary
 
+
+// update a word's definition in the dictionary
+let updateWord (word: string) (definition: string) (dictionary: Map<string, string>) =
+    match word.Trim() with
+    | "" -> Error "Please enter a valid word."  // Case for empty or whitespace word
+    | word when definition.Trim() = "" -> Error "Definition cannot be empty" // Case for empty or whitespace definition
+    | word when not (dictionary.ContainsKey(word.ToLower())) -> Error "Word not found!"  // Case for word not found
+    | word ->  // Case for successfully updating the word
+        let updatedDictionary = dictionary.Add(word.ToLower(), definition)
+        Ok updatedDictionary
 
 // Controls
 let createControls () =
@@ -77,6 +88,8 @@ let createForm () =
         lblSearch :> Control; txtSearch :> Control; btnSearch :> Control;
         lstSuggestions :> Control; lstResults :> Control
     |])
+
+    
 
     form
 

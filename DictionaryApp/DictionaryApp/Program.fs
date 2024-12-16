@@ -4,6 +4,19 @@ open System.Drawing
 open Newtonsoft.Json
 open System.IO
 
+// File paths for saving and loading data
+let dictionaryFilePath = "dictionary.json"
+
+
+// add a word to the dictionary
+let addWord (word: string) (definition: string) (dictionary: Map<string, string>) =
+    match word.Trim() with
+    | "" -> Error "Please enter a valid word."  // Case for empty or whitespace word
+    | word when dictionary.ContainsKey(word.ToLower()) -> Error "Word already exists!"  // Case for existing word
+    | word ->  // Case for successfully adding the word
+        let updatedDictionary = dictionary.Add(word.ToLower(), definition)
+        Ok updatedDictionary
+
 
 // Controls
 let createControls () =

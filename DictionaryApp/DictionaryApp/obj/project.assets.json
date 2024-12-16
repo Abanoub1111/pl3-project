@@ -281,11 +281,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\College\\Pl-3\\Projects\\DictionaryApp\\DictionaryApp\\DictionaryApp.fsproj",
+      "projectUniqueName": "D:\\College\\Pl-3\\Projects\\pl3-project\\DictionaryApp\\DictionaryApp\\DictionaryApp.fsproj",
       "projectName": "DictionaryApp",
-      "projectPath": "D:\\College\\Pl-3\\Projects\\DictionaryApp\\DictionaryApp\\DictionaryApp.fsproj",
+      "projectPath": "D:\\College\\Pl-3\\Projects\\pl3-project\\DictionaryApp\\DictionaryApp\\DictionaryApp.fsproj",
       "packagesPath": "C:\\Users\\ahmed\\.nuget\\packages\\",
-      "outputPath": "D:\\College\\Pl-3\\Projects\\DictionaryApp\\DictionaryApp\\obj\\",
+      "outputPath": "D:\\College\\Pl-3\\Projects\\pl3-project\\DictionaryApp\\DictionaryApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
